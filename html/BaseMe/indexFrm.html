@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+      html,body{
+        background: none;
+        height: 100%;
+      }
+      .app{
+        height: 100%;
+        display: flex;
+      }
+      .back{
+        flex: 30% 0 0;
+        width: 30%;
+        height: 100%;
+      }
+      .content{
+        flex: 70% 0 0;
+        width: 70%;
+        height: 100%;
+        background: #fff;
+      }
+      .content .top{
+        position: relative;
+        margin-bottom: 10px;
+      }
+      .content .top .info-flex{
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom:50px;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .content .top .info-flex .info{
+          text-align: center;
+          color: #fff;
+      }
+      .content .top .info-flex .info .avatar{
+        width: 60px;
+        height: 60px;
+        display: inline-block;
+        background: #fff;
+        border-radius: 50%;
+        margin-bottom: 5px;
+      }
+      .content .top .info-flex .info .name{
+        margin-bottom: 5px;
+      }
+      .content .top .info-flex .info .mobile{
+        margin-bottom: 5px;
+      }
+      .buttons {
+          padding: 0 40px;
+      }
+
+      .buttons .action {
+          height: 30px;
+          background: -webkit-linear-gradient(left, #6cdaac 50%, #5fcbcc);
+          color: #fff;
+          text-align: center;
+          line-height: 30px;
+          border-radius: 30px;
+          margin-bottom: 25px;
+      }
+      .lists{
+        padding-left: 15%;
+      }
+      .lists .list{
+        line-height: 30px;
+        margin-bottom: 15px;
+      }
+      .lists .list i{
+        margin-right: 15px;
+        font-size: 20px !important;
+      }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+        <div class="content">
+          <div class="top">
+            <img src="./bg.png" alt="">
+            <div class="info-flex">
+                <div class="info">
+                  <div class="avatar"></div>
+                  <div class="name">多说有益</div>
+                  <div class="mobile">182******2111</div>
+                </div>
+            </div>
+          </div>
+          <div class="buttons">
+              <div class="action" tapmode @click="">开工</div>
+          </div>
+          <div class="lists">
+            <div class="list" tapmode @click="openBar('BarOldOrder')">
+              <i class="aui-iconfont aui-icon-date"></i>
+              <span class="text">历史任务</span>
+            </div>
+            <div class="list" tapmode @click="openBar('BarFinance')">
+              <i class="ali-iconfont icon-caiwu"></i>
+              <span class="text">财务管理</span>
+            </div>
+            <div class="list" tapmode @click="openBar('BarMessage')">
+              <i class="ali-iconfont icon-xiaoxi"></i>
+              <span class="text">我的客服</span>
+            </div>
+            <div class="list" tapmode @click="openBar('BarComment')">
+              <i class="aui-iconfont aui-icon-star"></i>
+              <span class="text">我的评价</span>
+            </div>
+            <div class="list" tapmode @click="openBar('BarHomeInfo')">
+              <i class="aui-iconfont aui-icon-gear"></i>
+              <span class="text">我的设置</span>
+            </div>
+          </div>
+        </div>
+        <div class="back" tapmode @click="back"></div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+
+<script>
+    apiready = function() {
+      var app = new Vue({
+          el: '#app',
+          data: {
+
+          },
+          methods: {
+            back:function(){
+              api.closeFrame({
+                name: 'BaseMe'
+              });
+            },
+            openBar:function(name){
+              var that = this;
+              $app.openWin({
+                name:name
+              })
+              setTimeout(function(){
+                that.back();
+              },500)
+            }
+          },
+          mounted: function() {
+
+          }
+      });
+    };
+</script>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.2.0.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+    .come {
+        text-align: center;
+        padding-top: 50px;
+    }
+
+    .inputs {
+        padding: 30px;
+    }
+
+    .inputs .input-line {
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    .inputs .input-line .pos{
+      position: absolute;
+      right: 0;
+      bottom: 5px;
+    }
+    .buttons {
+        padding: 0 30px;
+    }
+
+    .buttons .send {
+        height: 50px;
+        background: -webkit-linear-gradient(left, #6cdaac 50%, #5fcbcc);
+        color: #fff;
+        text-align: center;
+        line-height: 50px;
+        border-radius: 50px;
+        margin-bottom: 25px;
+    }
+
+    .info {
+        text-align: center;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        font-size: 18px;
+        height: 80px;
+        line-height: 80px;
+    }
+
+    .info span {
+        color: #6cdaab
+    }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+      <div class="inputs">
+          <div class="input-line">
+              <input type="text" placeholder="输入手机号码" v-model="mobile">
+          </div>
+          <div class="input-line">
+              <input type="text" pattern="[0-9]*" placeholder="输入验证码" v-model="code">
+              <div class="aui-btn pos" :class="[{'aui-btn-green' : time == 90 }, {'disabled' : time != 90}]" tapmde @click="sendCode" v-text="codeMsg"></div>
+          </div>
+          <div class="input-line">
+              <input type="password" placeholder="输入密码" v-model="password">
+          </div>
+          <div class="input-line">
+              <input type="password" placeholder="确认密码" v-model="password_confirm">
+          </div>
+      </div>
+      <div class="buttons">
+          <div class="send" tapmde @click="submit">确认修改</div>
+      </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    apiready = function() {
+        $app.ready('light');
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+                mobile: '',
+                password: '',
+                password_confirm: '',
+                code: '',
+                time: 90,
+                codeMsg: '发送验证码'
+            },
+            computed: {},
+            methods: {
+                submit: function() {
+                    if (!this.mobile) {
+                        $app.toast('请输入手机号码');
+                        return;
+                    }
+                    if (!this.code) {
+                        $app.toast('请输入验证码');
+                        return;
+                    }
+                    if (!this.password) {
+                        $app.toast('请输入密码');
+                        return;
+                    }
+                    if (this.password != this.password_confirm) {
+                        $app.toast('两次密码输入不一致');
+                        this.password = '';
+                        this.password_confirm = '';
+                        return;
+                    }
+                    $app.ajax({
+                        url: $app.apiUrl.resetPassword,
+                        data: {
+                            mobile: this.mobile,
+                            code: this.code,
+                            password: this.password,
+                            password_confirm: this.password_confirm
+                        }
+                    }).then(function(ret) {
+                        $app.toast(ret.msg);
+                        setTimeout(function() {
+                            api.closeWin();
+                        }, 500)
+                    })
+                },
+                sendCode: function() {
+                    var that = this;
+                    if (that.time == 90) {
+                        if (!$app.validate.mobile(that.mobile)) {
+                            $app.toast('请输入正确的手机号码');
+                            return;
+                        }
+                        this.time--;
+                        $app.ajax({
+                            url: $app.apiUrl.sendCode,
+                            data: {
+                                mobile: that.mobile,
+                                type: 2
+                            }
+                        }).then(function(ret) {
+                            $app.toast(ret.msg);
+                            that.changeSendCodeButtonStatus();
+                        }).catch(function(err) {
+                            that.time = 90;
+                            that.codeMsg = '发送验证码';
+                        })
+                    }
+                },
+                changeSendCodeButtonStatus: function() {
+                    var that = this;
+                    var intervalInt = setInterval(function() {
+                        if (that.time == 0) {
+                            clearInterval(intervalInt);
+                            that.time = 90;
+                            that.codeMsg = '发送验证码'
+                        } else {
+                            that.time--;
+                            that.codeMsg = '已发送' + that.time;
+                        }
+                    }, 1000)
+                }
+            },
+            watch: {
+
+            }
+        });
+    };
+</script>
+
+</html>

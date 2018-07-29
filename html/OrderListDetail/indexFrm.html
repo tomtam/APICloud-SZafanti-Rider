@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        html,
+        body {
+            height: 100%;
+            font-size: 12px;
+        }
+
+        .aui-iconfont,
+        .ali-iconfont {
+            font-size: 18px !important;
+            color: #60cccc;
+        }
+
+        .lists {
+            padding-top: 10px;
+        }
+
+        .list {
+            padding: 10px;
+            background: #fff;
+            margin-bottom: 10px
+        }
+
+        .list .line-box .line {
+            margin-bottom: 25px;
+            display: flex;
+        }
+
+        .list .line-box .line .left {
+            flex: 60px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            position: relative;
+        }
+
+        .list .line-box .line .vertical-line::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            height: 50%;
+            width: 1px;
+            transform: scaleX(0.5);
+            background: #ccc;
+            left: 50%;
+            top: 100%;
+        }
+
+        .list .line-box .line .left .icon {
+            text-align: center;
+        }
+
+        .list .line-box .line .left .icon .icon-text {
+            font-size: 10px;
+            position: relative;
+            top: -5px;
+        }
+
+        .list .line-box .line .left .num {
+            font-size: 15px;
+            font-weight: 700;
+            width: 60px;
+            height: 30px;
+            background: #60cccc;
+            color: #fff;
+            line-height: 30px;
+            text-align: center;
+        }
+
+        .list .line-box .line .right {
+            flex: 1;
+        }
+
+        .list .line-box .line .bold {
+            font-weight: 700;
+        }
+
+        .list .line-box .line .order {
+            display: flex;
+        }
+
+        .list .line-box .line .order .line-30 {
+            flex: 1;
+        }
+
+        .list .line-box .line .order .star {
+            flex: 1;
+            text-align: right;
+            line-height: 30px;
+        }
+
+        .list .line-box .line .order .star .ali-iconfont {
+            color: #ff9001;
+        }
+
+        .list .line-box .line .right .line-30 {
+            line-height: 30px;
+            font-size: 15px;
+        }
+
+        .list .line-box .line .right .name {
+            font-size: 16px;
+        }
+
+        .list .line-box .line .right .info {
+            color: #6a6a6a;
+        }
+
+        .list .line-box .line .money span {}
+
+        .buttons {
+            padding: 0px;
+        }
+
+        .buttons .btn {
+            height: 40px;
+            background: -webkit-linear-gradient(left, #6cdaac 50%, #5fcbcc);
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50px;
+            font-size: 15px;
+        }
+        .times{
+          text-align: center;
+        }
+        .item-info{
+
+        }
+        .item-info .item{
+          padding: 5px;
+          background: #fafafa;
+          margin-bottom: 10px;
+          display: flex;
+        }
+        .item-info .item .left{
+          flex: 60px 0 0;
+        }
+        .item-info .item .left .img{
+            width: 60px;
+            height: 60px;
+            background: #ccc;
+        }
+        .item-info .item .right{
+          flex: 1;
+          margin-left: 10px;
+        }
+        .item-info .item .right .title{
+          height: 20px;
+          line-height: 20px;
+        　overflow: hidden;
+        }
+        .item-info .item .right .price{
+          line-height: 20px;
+        }
+        .red{
+          color: red
+        }
+        .item-info .item .price .num{
+          text-align: right;
+        }
+        .item-info .money{
+          line-height: 30px;
+        }
+        .item-info .money .number{
+          text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+        <div class="lists">
+            <div class="list">
+                <div class="line-box">
+                    <div class="line">
+                        <div class="left">
+                            <div class="num">#18</div>
+                        </div>
+                        <div class="right order">
+                            <div class="line-30">预计收益：￥<span>6.2</span></div>
+                            <div class="star">
+                                <span>自动分配</span>
+                                <span class="ali-iconfont icon-xingxing"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line">
+                        <div class="left vertical-line">
+                            <div class="icon">
+                                <span class="ali-iconfont icon-dizhi1"></span>
+                                <div class="icon-text">取货</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="name">BUEBERRY博柏利官方旗舰店</div>
+                            <div class="info">雨花区德思勤城市广场B5 703</div>
+                        </div>
+                    </div>
+                    <div class="line">
+                        <div class="left">
+                            <div class="icon">
+                                <span class="ali-iconfont icon-dizhi1"></span>
+                                <div class="icon-text">送货</div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="name">雨花区楚天世纪城 7栋一单元</div>
+                            <div class="info">陈女士 150****8788</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons aui-row">
+                    <div class="aui-col-xs-4">
+                        <div class="btn" tapmde @click="openGPS" style="margin-right:5px;">导航去商家</div>
+                    </div>
+                    <div class="aui-col-xs-4">
+                        <div class="btn" tapmde @click="openClient" style="margin:0 5px;">联系客户</div>
+                    </div>
+                    <div class="aui-col-xs-4">
+                        <div class="btn" tapmde @click="" style="margin-left:5px;">我已送达</div>
+                    </div>
+                </div>
+            </div>
+            <div class="list times">
+              <div class="aui-row">
+                  <div class="aui-col-xs-4">
+                    <div class="text">抢单</div>
+                    <div class="time">11:34</div>
+                  </div>
+                  <div class="aui-col-xs-4">
+                    <div class="text">取货</div>
+                    <div class="time">12:00</div>
+                  </div>
+                  <div class="aui-col-xs-4">
+                    <div class="text">送达</div>
+                    <div class="time">-:-</div>
+                  </div>
+              </div>
+            </div>
+            <div class="list item-info">
+              <div class="item" tapmode @click="">
+                  <div class="left">
+                      <div class="img"></div>
+                  </div>
+                  <div class="right">
+                      <div class="title">BURBERRY/博柏利短袖马术风格纹棉轻盈格纹....</div>
+                      <div class="title">绿色；L</div>
+                      <div class="price aui-row">
+                        <div class="aui-col-xs-8 red">￥150.00</div>
+                        <div class="aui-col-xs-4 num">x1</div>
+                      </div>
+                  </div>
+              </div>
+              <div class="item" tapmode @click="">
+                  <div class="left">
+                      <div class="img"></div>
+                  </div>
+                  <div class="right">
+                      <div class="title">BURBERRY/博柏利短袖马术风格纹棉轻盈格纹....</div>
+                      <div class="title">绿色；L</div>
+                      <div class="price aui-row">
+                        <div class="aui-col-xs-8 red">￥150.00</div>
+                        <div class="aui-col-xs-4 num">x1</div>
+                      </div>
+                  </div>
+              </div>
+              <div class="money">
+                <div class="aui-row">
+                    <div class="aui-col-xs-8 title">商品金额</div>
+                    <div class="aui-col-xs-4 number">￥150.00</div>
+                </div>
+                <div class="aui-row">
+                    <div class="aui-col-xs-8 title">配送费</div>
+                    <div class="aui-col-xs-4 number">¥10.00</div>
+                </div>
+                <div class="aui-row">
+                    <div class="aui-col-xs-8 title">总计</div>
+                    <div class="aui-col-xs-4 number">¥160.00</div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    apiready = function() {
+      var app = new Vue({
+          el: '#app',
+          data: {
+
+          },
+          methods: {
+              openGPS: function() {
+                  var that = this
+                  api.actionSheet({
+                      cancelTitle: '取消',
+                      buttons: ['高德地图', '百度地图']
+                  }, function(ret, err) {
+                      var index = ['', 'camera', 'library'];
+                      if (ret.buttonIndex == 3) {
+                          return
+                      }
+                  });
+              },
+              openClient: function() {
+                  var that = this
+                  api.actionSheet({
+                      cancelTitle: '取消',
+                      buttons: ['电话：0731-27877867', '手机：19944556664']
+                  }, function(ret, err) {
+                      var index = ['', '0731-27877867', '19944556664'];
+                      if (ret.buttonIndex == 3) {
+                          return
+                      }
+                  });
+              },
+          },
+          mounted: function() {
+
+          }
+      });
+    };
+</script>
+
+</html>

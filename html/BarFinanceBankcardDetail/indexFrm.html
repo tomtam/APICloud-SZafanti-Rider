@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        .card-info {
+            margin: 15px 15px 0 15px;
+            background: #fff;
+            border-radius: 10px;
+        }
+
+        .card-info .bank-list {
+            position: relative;
+            padding: 10px 10px 0 10px;
+            z-index: 2;
+        }
+
+        .card-info .bank-list .list {
+            position: relative;
+        }
+
+        .card-info .bank-list .list .info {
+            position: absolute;
+            top: 30%;
+            left: 21.5%;
+            right: 0;
+            bottom: 0;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .card-info .show-info {
+            padding: 10px;
+        }
+
+        .card-info .show-info .title {
+            line-height: 30px;
+            border-bottom: 1px solid #e6e6e6;
+            margin-bottom: 10px;
+        }
+
+        .card-info .show-info .info {
+            padding: 10px;
+            line-height: 30px;
+            background: #f4f4f4;
+            border-radius: 5px;
+        }
+
+        .buttons {
+            padding: 20px 30px;
+        }
+
+        .buttons .longBtn {
+            height: 50px;
+            background: -webkit-linear-gradient(left, #6cdaac 50%, #5fcbcc);
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+
+        <div class="card-info">
+            <div class="bank-list">
+                <div class="list">
+                    <img :src="card.bank_name | nameFilter">
+                    <div class="info">
+                        <div class="user" v-text="card.card_holder"></div>
+                        <div class="number">{{card.card_number | formatNumber}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="show-info">
+                <div class="title">银行卡信息：</div>
+                <div class="info">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-3">持卡人</div>
+                        <div class="aui-col-xs-9" style="text-align:right" v-text="card.card_holder"></div>
+                    </div>
+                    <div class="aui-row">
+                        <div class="aui-col-xs-3">卡号</div>
+                        <div class="aui-col-xs-9" style="text-align:right">{{card.card_number | formatNumber}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="buttons">
+            <div class="longBtn" @click="removeCard">移除</div>
+        </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    var cardNameMapping = {
+        '中国农业银行': '../../image/bank/nongye.png',
+        '中国建设银行': '../../image/bank/jianshe.png',
+        '中国工商银行': '../../image/bank/gongshang.png',
+        '中国银行': '../../image/bank/zhongguo.png',
+        '招商银行': '../../image/bank/zhaoshang.png',
+        '光大银行': '../../image/bank/guangda.png',
+        '中国邮政储蓄银行': '../../image/bank/youzheng.png',
+        '兴业银行': '../../image/bank/xingye.png',
+        '中信银行': '../../image/bank/zhongxin.png',
+        '浦发银行': '../../image/bank/pufa.png',
+        '广发银行': '../../image/bank/guangfa.png',
+        '平安银行': '../../image/bank/pingan.png',
+        '交通银行': '../../image/bank/jiaotong.png',
+        '华夏银行': '../../image/bank/huaxia.png',
+        '民生银行': '../../image/bank/minsheng.png',
+    }
+
+    apiready = function() {
+        $app.ready('light');
+
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+                card: api.pageParam.card,
+            },
+            computed: {
+
+            },
+            methods: {
+                removeCard: function(){
+                    var that = this;
+                    api.confirm({
+                        title: '确认移除该银行卡',
+                        buttons: ['确定', '取消']
+                    }, function(ret, err){
+                        if(ret.buttonIndex == 1){
+                            $app.ajax({
+                                url: $app.apiUrl.bankCardDelete,
+                                data:{
+                                    id: that.card.id
+                                }
+                            }).then(function(resp) {
+                                $app.toast(resp.msg);
+                                api.sendEvent({
+                                    name: 'updateBankCard',
+                                });
+                                setTimeout(function(){
+                                    api.closeWin();
+                                }, 500)
+                            })
+                        }
+                    });
+
+                }
+            },
+            watch: {
+
+            },
+            filters: {
+                nameFilter: function(value) {
+                    return cardNameMapping[value];
+                },
+                formatNumber: function(cardNumber){
+                    var format = ''
+                    for(var i = 0; i < cardNumber.length; i++){
+                        if( (i+1) % 4 == 0){
+                            format += (cardNumber[i] + ' ');
+                        }else{
+                            format += cardNumber[i];
+                        }
+                    }
+                    return format;
+                }
+            },
+        });
+    };
+</script>
+
+</html>

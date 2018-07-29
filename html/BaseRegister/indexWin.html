@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        html,body{
+          background: #f6f6f6;
+        }
+        .come {
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .inputs {
+            padding: 30px;
+        }
+
+        .inputs .input-line {
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .inputs .input-line input {
+            /*text-align: center;*/
+        }
+
+        .inputs .input-line .pos {
+            position: absolute;
+            right: 0;
+            bottom: 5px;
+        }
+
+        .buttons {
+            padding: 0 30px;
+        }
+
+        .buttons .login {
+            height: 50px;
+            background: -webkit-linear-gradient(left, #6cdaac 50%, #5fcbcc);
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+        }
+
+        .buttons .other {
+            text-align: center;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="come">
+            <h1>骑手注册</h1>
+        </div>
+        <div class="inputs">
+            <div class="input-line">
+                <input type="text" placeholder="输入手机号码">
+            </div>
+            <div class="input-line">
+                <input type="text" placeholder="输入验证码">
+                <div class="aui-btn aui-btn-green pos">发送验证码</div>
+            </div>
+            <div class="input-line">
+                <input type="password" placeholder="输入密码">
+            </div>
+            <div class="input-line">
+                <input type="password" placeholder="确认密码">
+            </div>
+        </div>
+        <div class="buttons">
+            <div class="login" tapmode  @click="goIndex">注册</div>
+            <div class="other">
+                <div class="aui-row">
+                    <div class="aui-col-xs-12" tapmode @click="api.closeWin()">已有账户？去登录</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+
+    apiready = function() {
+        $app.ready();
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+
+            },
+            computed: {
+
+            },
+            methods: {
+                goIndex: function() {
+
+                }
+            },
+            watch: {
+
+            }
+        });
+    };
+
+
+</script>
+
+</html>

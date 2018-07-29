@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        .bank-list {
+            padding: 10px 10px 0 10px;
+        }
+
+        .bank-list .list {
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .bank-list .list .info {
+            position: absolute;
+            top: 30%;
+            left: 21.5%;
+            right: 0;
+            bottom: 0;
+            color: #fff;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+        <div class="bank-list">
+            <!-- 什么都没有 -->
+            <div v-if="haveNoData" class="aui-col-xs-12 aui-text-center" style="margin-top:30%;">
+                <img src="../../image/no_content.png" style="width:18%;margin:0 auto;">
+                <h5 style="margin-top:1rem;" class="aui-font-size-14">啊哦,这里什么都没有~</h5>
+            </div>
+            <div v-else class="list" v-for="(bank,key) in list" :key="key" tapmde @click="goBankDetail(bank)">
+                <img :src="bank.bank_name | nameFilter" alt="">
+                <div class="info">
+                    <div class="user" v-text="bank.card_holder"></div>
+                    <div class="number">{{bank.card_number | formatNumber}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    var cardNameMapping = {
+        '中国农业银行': '../../image/bank/nongye.png',
+        '中国建设银行': '../../image/bank/jianshe.png',
+        '中国工商银行': '../../image/bank/gongshang.png',
+        '中国银行': '../../image/bank/zhongguo.png',
+        '招商银行': '../../image/bank/zhaoshang.png',
+        '光大银行': '../../image/bank/guangda.png',
+        '中国邮政储蓄银行': '../../image/bank/youzheng.png',
+        '兴业银行': '../../image/bank/xingye.png',
+        '中信银行': '../../image/bank/zhongxin.png',
+        '浦发银行': '../../image/bank/pufa.png',
+        '广发银行': '../../image/bank/guangfa.png',
+        '平安银行': '../../image/bank/pingan.png',
+        '交通银行': '../../image/bank/jiaotong.png',
+        '华夏银行': '../../image/bank/huaxia.png',
+        '民生银行': '../../image/bank/minsheng.png',
+    }
+    var page = 1;
+    apiready = function() {
+        $app.ready('light');
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+                banks: cardNameMapping,
+                list: [],
+                haveNoData: false,
+            },
+            methods: {
+                goBankDetail: function(card) {
+                    if (api.pageParam.isSelect) {
+                        api.sendEvent({
+                            name: 'selectCard',
+                            extra: {
+                                card: card
+                            }
+                        });
+                        api.closeWin();
+                    } else {
+                        $app.openWin({
+                            name: 'BarFinanceBankcardDetail',
+                            pageParam: {
+                                card: card
+                            }
+                        })
+                    }
+                },
+                getData: function() {
+                    var that = this;
+                    $app.ajax({
+                        url: $app.apiUrl.bankCardList,
+                        headers: {
+                            'page-num': page,
+                            'page-limit': 10
+                        }
+                    }).then(function(resp) {
+                        if (resp.data.length == 0 && page == 1) {
+                            that.haveNoData = true;
+                        } else {
+                            that.haveNoData = false;
+                        }
+                        page++;
+                        that.list = that.list.concat(resp.data);
+                    })
+                }
+            },
+            filters: {
+                nameFilter: function(value) {
+                    return cardNameMapping[value];
+                },
+                formatNumber: function(cardNumber) {
+                    var format = ''
+                    for (var i = 0; i < cardNumber.length; i++) {
+                        if ((i + 1) % 4 == 0) {
+                            format += (cardNumber[i] + ' ');
+                        } else {
+                            format += cardNumber[i];
+                        }
+                    }
+                    return format;
+                }
+            },
+            mounted: function() {
+                this.getData();
+            }
+        });
+
+        api.setRefreshHeaderInfo({
+            bgColor: '#fff',
+        }, function(ret, err) {
+            page = 1;
+            app.list = [];
+            app.getData();
+        });
+
+        api.addEventListener({
+            name: 'scrolltobottom'
+        }, function(ret, err) {
+            app.getData();
+        });
+
+        api.addEventListener({
+            name: 'updateBankCard'
+        }, function(ret, err) {
+            page = 1;
+            app.list = [];
+            app.getData();
+        });
+
+    };
+</script>
+
+</html>

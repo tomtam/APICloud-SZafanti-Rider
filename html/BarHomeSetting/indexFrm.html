@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        html,body{
+          background: #f6f6f6;
+        }
+        .aui-list {
+            margin-top: 8px;
+        }
+
+        .image {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            margin: 10px 0;
+        }
+
+        .buttons {
+            padding: 30px;
+        }
+
+        .buttons .loginout {
+            height: 50px;
+            background: -webkit-linear-gradient(left, #6cdaac 50%, #5fcbcc);
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+        }
+        .small-text{
+          font-size: 0.8em !important;
+        }
+        .flex-box{
+          text-align: center;
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+        <ul class="aui-list aui-list-in ">
+            <li class="aui-list-item" tapmde @click="goSettingPass">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">登录密码</div>
+                    <div class="aui-list-item-right"></div>
+                </div>
+            </li>
+            <li class="aui-list-item" tapmde @click="goSettingPay">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title" v-text="isSetPayPass?'支付密码':'支付密码'"></div>
+                    <div class="aui-list-item-right"></div>
+                </div>
+            </li>
+        </ul>
+        <ul class="aui-list aui-media-list">
+          <li class="aui-list-item">
+              <div class="aui-media-list-item-inner">
+                  <div class="aui-list-item-inner">
+                      <div class="aui-list-item-title">指纹支付</div>
+                      <div class="aui-list-item-text small-text">开启后，可通过验证系统指纹快速完成付款</div>
+                  </div>
+                  <div class="aui-list-item-media flex-box">
+                      <input type="checkbox" class="aui-switch" checked>
+                  </div>
+              </div>
+          </li>
+      </ul>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    apiready = function() {
+        $app.ready('light');
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+                isSetPayPass: 0
+            },
+            mounted: function() {
+                this.getData();
+            },
+            computed: {
+
+            },
+            methods: {
+                goSettingPass: function() {
+                    $app.openWin({
+                        name: 'BarHomeSettingPass'
+                    })
+                },
+                goSettingPay: function() {
+                    $app.openWin({
+                        name: 'BarHomeSettingPay',
+                        pageParam: {
+                            type: app.$data.isSetPayPass
+                        }
+                    })
+                },
+                goSettingMobile: function() {
+                    $app.openWin({
+                        name: 'BarHomeSettingMobile'
+                    })
+                },
+                getData: function() {
+                    var that = this;
+                    $app.ajax({
+                        url: $app.apiUrl.isSetPayPass
+                    }).then(function(ret) {
+                        that.isSetPayPass = ret.data.is_set_pay_password
+                    })
+                }
+            },
+            watch: {
+
+            }
+        });
+    };
+</script>
+
+</html>

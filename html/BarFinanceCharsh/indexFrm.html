@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        .content {
+            background: #fff;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        .content .title {
+            font-weight: bold;
+        }
+
+        .content .select-bank {
+            margin-bottom: 20px;
+        }
+
+        .content .bank {
+            margin-bottom: 5px;
+        }
+
+        .content .green {
+            color: #6cdaac
+        }
+
+        .content .show-money {
+            border-bottom: 1px solid #e5e5e5;
+            margin-bottom: 10px;
+            line-height: 80px;
+        }
+
+        .content .show-money .money {
+            text-align: center;
+            height: 80px;
+            font-size: 40px;
+        }
+
+        .content .other {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .buttons .longBtn {
+            height: 50px;
+            background: -webkit-linear-gradient(left, #6cdaac 50%, #5fcbcc);
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+        <div class="aui-content-padded">
+            <div class="content">
+                <div class="aui-row select-bank">
+                    <div class="aui-col-xs-4 title">到账银行卡 </div>
+                    <div class="aui-col-xs-8">
+                        <div class="bank green" @click="selectCard" v-if="!card.id">请选择银行卡</div>
+                        <div class="bank green" @click="selectCard" v-else v-text="card.bank_name + '(' + card.card_number.slice(card.card_number.length - 5) + ')'">农业银行（2619）</div>
+                        <!-- <div class="text">提现手续费率1.2%</div> -->
+                    </div>
+                </div>
+                <div class="title">提现银行卡</div>
+                <div class="aui-row show-money">
+                    <div class="aui-col-xs-1 title">￥</div>
+                    <div class="aui-col-xs-11">
+                        <input class="money" type="number" v-model="money">
+                    </div>
+                </div>
+                <!-- <div class="other">额外扣除手续费￥1.2（费率1.2%）</div> -->
+                <div class="buttons">
+                    <div class="longBtn" @click="submit">提现</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    window.addEventListener('load', function() {
+        FastClick.attach(document.querySelector('.longBtn'));
+        FastClick.attach(document.querySelector('.bank'));
+    }, false);
+    apiready = function() {
+        $app.ready('light');
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+                card: {},
+                money: ''
+            },
+            methods: {
+                submit: function() {
+                    if (!this.card.id) {
+                        $app.toast('请选择银行卡');
+                        return;
+                    }
+                    if (!this.money) {
+                        $app.toast('请输入金额');
+                        return;
+                    }
+                    var that = this;
+                    api.prompt({
+                        title: '请输入支付密码',
+                        type: 'password',
+                        buttons: ['确定', '取消'],
+                    }, function(ret, err) {
+                        if (ret.buttonIndex == 1) {
+                            $app.ajax({
+                                url: $app.apiUrl.drawcash,
+                                data: {
+                                    asset_type: 'money',
+                                    type: 'withdrawToBankCard',
+                                    bank_card_id: that.card.id,
+                                    pay_password: ret.text,
+                                    money: that.money
+                                }
+                            }).then(function(resp) {
+                                $app.toast(resp.msg);
+                                setTimeout(function() {
+                                    api.closeWin();
+                                }, 500)
+                            })
+                        }
+                    });
+                },
+                selectCard: function() {
+                    $app.openWin({
+                        name: 'BarFinanceBankcard',
+                        pageParam: {
+                            isSelect: true
+                        }
+                    })
+                }
+            }
+        });
+
+        api.addEventListener({
+            name: 'selectCard'
+        }, function(ret, err) {
+            if (ret) {
+                app.card = ret.value.card
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+
+    };
+</script>
+
+</html>

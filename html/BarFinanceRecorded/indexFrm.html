@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        .app {
+            font-size: 13px;
+        }
+
+        .list {
+            margin-top: 10px;
+            background: #fff;
+            padding: 10px;
+            display: flex;
+        }
+
+        .list .item-image {
+            width: 60px;
+            height: 60px;
+            background: #ccc;
+            flex: 60px 0 0;
+            overflow: hidden;
+        }
+
+        .list .item-image img{
+            max-width: 100%;
+        }
+
+        .list .item-info {
+            padding-left: 10px;
+            flex: 1;
+        }
+
+        .list .item-info .title {
+            font-size: 15px;
+            line-height: 20px;
+        }
+
+        .list .item-info .title span {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .list .item-info .line {
+            color: #777;
+        }
+
+        .list .item-go {
+            flex: 30px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+        <!-- 什么都没有 -->
+        <div v-if="haveNoData" class="aui-col-xs-12 aui-text-center" style="margin-top:30%;">
+            <img src="../../image/no_content.png" style="width:18%;margin:0 auto;">
+            <h5 style="margin-top:1rem;" class="aui-font-size-14">啊哦,这里什么都没有~</h5>
+        </div>
+        <div v-else class="list" tapmode @click="goDetail" v-for="(item, key) in list" :key="key">
+            <div class="item-image" v-for="(goods, gKey) in item.order_goods_info" :key="gKey" v-if="key == 0">
+                <img :src="goods.thum">
+            </div>
+            <div class="item-info">
+                <div class="title"><span v-text="'#' + item.id"></span> <span v-text="'配送收入¥' + item.total_money"></span></div>
+                <div class="line" v-text="'订单号码：' + item.order_no"></div>
+                <div class="line" v-text="'订单时间：' + item.create_time"></div>
+            </div>
+            <div class="item-go">
+                <i class="aui-iconfont aui-icon-right"></i>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+
+    var page = 1;
+    apiready = function() {
+      $app.ready('light');
+
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+                list: [],
+                haveNoData: false,
+            },
+            methods: {
+                goDetail: function() {
+                    $app.openWin({
+                        name: 'BarOrdersDetail',
+                    })
+                },
+                getData: function() {
+                    var that = this;
+                    $app.ajax({
+                        url: $app.apiUrl.financeRecordList,
+                        headers: {
+                            'page-num': page,
+                            'page-limit': 10
+                        }
+                    }).then(function(resp) {
+                        if(resp.data.length == 0 && page == 1){
+                            that.haveNoData = true;
+                        }else{
+                            that.haveNoData = false;
+                        }
+                        page++;
+                        that.list = that.list.concat(resp.data);
+                    })
+                }
+            },
+            mounted: function(){
+                this.getData();
+            }
+        });
+
+        api.setRefreshHeaderInfo({
+            bgColor: '#fff',
+        }, function(ret, err) {
+            page = 1;
+            app.list = [];
+            app.getData();
+        });
+
+        api.addEventListener({
+            name: 'scrolltobottom'
+        }, function(ret, err) {
+            app.getData();
+        });
+    };
+</script>
+
+</html>

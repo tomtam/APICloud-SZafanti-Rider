@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        body{
+            background-color: #fff;
+        }
+        .content {}
+
+        .top-info {
+            position: relative;
+        }
+
+        .top-info .select {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .top-info .select .in {
+            width: 100%;
+            padding: 0 40px;
+        }
+
+        .top-info .select .in .title {
+            font-size: 20px;
+        }
+
+        .top-info .select .in .number {
+            font-size: 50px;
+        }
+
+        .lists {
+            padding: 15px;
+            background: #fff;
+        }
+
+        .lists .list {
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e9e9e9;
+        }
+
+        .lists .list .number {
+            color: #777;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+        <div class="content">
+            <div class="top-info">
+                <img src="./bg.png" alt="">
+                <div class="select">
+                    <div class="aui-row in">
+                        <div class="aui-col-xs-8">
+                            <div class="title">今日收益（元）</div>
+                            <div class="number" v-text="today_income"></div>
+                        </div>
+                        <div class="aui-col-xs-4" style="text-align:right">
+                            <i class="ali-iconfont icon-rili" style="color:#fff;font-size:30px;" tapmde @click="openRili"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="lists">
+                <!-- 什么都没有 -->
+                <div v-if="haveNoData" class="aui-col-xs-12 aui-text-center" style="margin-top:30%;">
+                    <img src="../../image/no_content.png" style="width:18%;margin:0 auto;">
+                    <h5 style="margin-top:1rem;" class="aui-font-size-14">啊哦,这里什么都没有~</h5>
+                </div>
+                <div v-else class="list" v-for="(item,key) in list" :key="key">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-8">
+                            <div class="title" v-text="item.intro"></div>
+                            <div class="number" v-text="item.create_time"></div>
+                        </div>
+                        <div class="aui-col-xs-4" style="text-align:right" v-text="item.symbol + item.change_money"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    var page = 1;
+    apiready = function() {
+        $app.ready('light');
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+                list: [],
+                startTime: '',
+                endTime: '',
+                today_income:'',
+                haveNoData: false,
+            },
+            methods: {
+                openRili: function() {
+                    var that = this;
+                    api.openPicker({
+                        type: 'date',
+                        title: '选择开始时间',
+                    }, function(ret, err) {
+                        if (ret) {
+                            that.startTime = ret.year + '-' + ret.month + '-' + ret.day;
+                            api.openPicker({
+                                type: 'date',
+                                title: '选择结束时间',
+                            }, function(ret, err) {
+                                if (ret) {
+                                    that.endTime = ret.year + '-' + ret.month + '-' + ret.day;
+                                    page = 1;
+                                    that.list = [];
+                                    that.getData();
+                                } else {
+                                    alert(JSON.stringify(err));
+                                }
+                            });
+                        } else {
+                            alert(JSON.stringify(err));
+                        }
+                    });
+                },
+                getData: function() {
+                    var that = this;
+                    $app.ajax({
+                        url: $app.apiUrl.assetList,
+                        data: {
+                            begin_time: this.startTime,
+                            end_time: this.endTime
+                        },
+                        headers: {
+                            'page-num': page,
+                            'page-limit': 10
+                        }
+                    }).then(function(resp) {
+                        if(resp.data.length == 0 && page == 1){
+                            that.haveNoData = true;
+                        }else{
+                            that.haveNoData = false;
+                        }
+                        page++;
+                        that.list = that.list.concat(resp.data);
+                    })
+                },
+                getIndexData: function() {
+                    var that = this;
+                    $app.ajax({
+                        url: $app.apiUrl.indexData,
+                    }).then(function(ret) {
+                        that.today_income = ret.data.today_income
+                    })
+                },
+            },
+            mounted: function() {
+                this.getData();
+                this.getIndexData();
+            }
+        });
+
+        api.setRefreshHeaderInfo({
+            bgColor: '#fff',
+        }, function(ret, err) {
+            page = 1;
+            app.list = [];
+            app.startTime = '';
+            app.endTime = '';
+            app.getData();
+            app.getIndexData();
+        });
+
+        api.addEventListener({
+            name: 'scrolltobottom'
+        }, function(ret, err) {
+            app.getData();
+        });
+
+    };
+</script>
+
+</html>

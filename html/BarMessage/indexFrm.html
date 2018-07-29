@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+      html,body{
+        background: #f0f0f0;
+      }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+      <section class="aui-chat">
+          <div class="aui-chat-header">2016年7月13日</div>
+          <div class="aui-chat-item aui-chat-left">
+              <div class="aui-chat-media">
+                  <img src="../../image/demo2.png" />
+              </div>
+              <div class="aui-chat-inner">
+                  <div class="aui-chat-content">
+                      <div class="aui-chat-arrow"></div>
+                      Hello AUI 2.0!
+                  </div>
+                  <div class="aui-chat-status aui-chat-status-refresh">
+                      <i class="aui-iconfont aui-icon-correct aui-text-success"></i>
+                  </div>
+              </div>
+          </div>
+          <div class="aui-chat-item aui-chat-right">
+              <div class="aui-chat-media">
+                  <img src="../../image/liulangnan.png" />
+              </div>
+              <div class="aui-chat-inner">
+                  <div class="aui-chat-content">
+                      <div class="aui-chat-arrow"></div>
+                      你好！
+                  </div>
+                  <div class="aui-chat-status">
+                      <i class="aui-iconfont aui-icon-info aui-text-danger"></i>
+                  </div>
+              </div>
+          </div>
+          <div class="aui-chat-item aui-chat-left">
+              <div class="aui-chat-media">
+                  <img src="../../image/demo2.png" />
+              </div>
+              <div class="aui-chat-inner">
+                  <div class="aui-chat-content">
+                      <div class="aui-chat-arrow"></div>
+                      <img src="../../image/l1.png" />
+                  </div>
+              </div>
+          </div>
+          <div class="aui-chat-item aui-chat-right">
+              <div class="aui-chat-media">
+                  <img src="../../image/liulangnan.png" />
+              </div>
+              <div class="aui-chat-inner">
+                  <div class="aui-chat-content">
+                      <div class="aui-chat-arrow"></div>
+                      以前拍摄的牛背山星空agasgasga以前拍摄的牛背山星空agasgasga
+                  </div>
+              </div>
+          </div>
+          <div class="aui-chat-item aui-chat-left">
+              <div class="aui-chat-media">
+                  <img src="../../image/demo2.png" />
+              </div>
+              <div class="aui-chat-inner">
+                  <div class="aui-chat-content">
+                      <div class="aui-chat-arrow"></div>
+                      <img src="../../image/l2.png" />
+                  </div>
+              </div>
+          </div>
+      </section>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    apiready = function() {
+        $app.ready('light')
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+
+            },
+            computed: {
+
+            },
+            methods: {
+
+            },
+            watch: {
+
+            }
+        });
+    };
+</script>
+
+</html>

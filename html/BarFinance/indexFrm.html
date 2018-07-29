@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        .app {
+            display: block;
+        }
+
+        .app .show-earnings {
+            position: relative;
+        }
+
+        .app .show-earnings img {
+            display: block;
+        }
+
+        .app .show-earnings .fix-box {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app .show-earnings .fix-box .content {
+            color: #fff;
+            text-align: center;
+        }
+
+        .app .show-earnings .fix-box .content .title {
+            font-size: 20px;
+        }
+
+        .app .show-earnings .fix-box .content .number {
+            font-size: 44px;
+            margin-bottom: 10px
+        }
+
+        .app .show-earnings .fix-box .content .charsh {
+            font-size: 20px;
+            display: inline-block;
+            border: 1px solid #fff;
+            padding: 5px 30px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app" class="app">
+        <div class="show-earnings">
+            <img width='100%' src="../../image/bg.png">
+            <div class="fix-box">
+                <div class="content">
+                    <div class="title">余额</div>
+                    <div class="number" v-text="balance"></div>
+                    <div class="charsh" tapmde @click="goSubPage('BarFinanceCharsh')">提现</div>
+                </div>
+            </div>
+        </div>
+        <section class="aui-grid">
+            <div class="aui-row">
+                <div class="aui-col-xs-4" tapmde @click="goSubPage('BarFinanceRecorded')">
+                    <i class="ali-iconfont icon-zhangdanguanli" style="color:#6cdaac"></i>
+                    <div class="aui-grid-label">入账管理</div>
+                </div>
+                <div class="aui-col-xs-4" tapmde @click="goSubPage('BarFinanceBankcard')">
+                    <i class="ali-iconfont icon-bank" style="color:#6cdaac"></i>
+                    <div class="aui-grid-label">银行卡</div>
+                </div>
+                <div class="aui-col-xs-4" tapmde @click="goSubPage('BarFinanceBill')">
+                    <i class="ali-iconfont icon-caiwu" style="color:#6cdaac"></i>
+                    <div class="aui-grid-label">财务明细</div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    apiready = function() {
+        $app.ready('light');
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+                balance: 0
+            },
+            computed: {
+
+            },
+            methods: {
+                goSubPage: function(pageName) {
+                    $app.openWin({
+                        name: pageName
+                    });
+                },
+                readAsset: function() {
+                    // var that = this;
+                    // $app.ajax({
+                    //     url: $app.apiUrl.assetRead
+                    // }).then(function(resp){
+                    //     that.balance = resp.data.money
+                    // })
+                }
+            },
+            watch: {
+
+            },
+            mounted: function() {
+                // this.readAsset()
+            }
+        });
+
+        api.setRefreshHeaderInfo({
+            bgColor: '#f6f6f6',
+        }, function(ret, err) {
+            // app.readAsset()
+        });
+
+    };
+</script>
+
+</html>

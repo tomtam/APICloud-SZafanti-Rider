@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="./css/aui-skin.css" />
+    <style media="screen">
+        html,
+        body {
+            height: 100%;
+        }
+        .wrap {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+        }
+        .aui-iconfont,
+        .ali-iconfont{
+          font-size: 25px !important;
+        }
+        .flex-1 {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+        }
+        label {
+            margin: 10px;
+            font-size: 24px;
+        }
+        ul {
+            margin-bottom: 10px;
+        }
+        ul li {
+            margin: 5px 10px;
+            padding: 5px;
+            color: #000;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body class="wrap">
+    <div id="header">
+        <div class="header-item header-item-active">
+          <header class="aui-bar aui-bar-nav">
+              <a class="aui-pull-left aui-btn" tapmde onclick="openMe()">
+                  <span class="aui-iconfont aui-icon-menu"></span>
+              </a>
+              <div class="aui-title">新任务</div>
+              <a class="aui-pull-right aui-btn" tapmde onclick="openMerchant()">
+                  <span class="ali-iconfont icon-dizhi1"></span>
+              </a>
+          </header>
+          <div id="nav" class="aui-tab">
+              <div class="aui-tab-item" :class="{'aui-active' : index == 0}" @click="changeNav(0)" tapmode>新任务</div>
+              <div class="aui-tab-item" :class="{'aui-active' : index == 1}" @click="changeNav(1)" tapmode>待取货</div>
+              <div class="aui-tab-item" :class="{'aui-active' : index == 2}" @click="changeNav(2)" tapmode>配送中</div>
+          </div>
+        </div>
+    </div>
+</body>
+<script src="./script/api.js"></script>
+<script src="./script/fastclick.js"></script>
+<script src="./script/vue.min.js"></script>
+<script src="./script/app.js"></script>
+<script>
+    var isLogin = true;
+    var tab = null;
+    apiready = function() {
+      $app.ready('light');
+      $app.fixHeaderFooterBar('header');
+      hasLogin();
+      // 监听登录事件
+      api.addEventListener({
+          name: 'loginIsTrue'
+      }, function(){
+          isLogin = true;
+          hasLogin()
+      });
+      api.addEventListener({
+          name: 'logout'
+      }, function(){
+          isLogin = false;
+          hasLogin()
+      });
+      // 打开组文件
+      var app = new Vue({
+          el: '#nav',
+          data:{
+              index: 0
+          },
+          methods:{
+              changeNav: function(index){
+                  api.setFrameGroupIndex({
+                      name: 'OrderListGroup',
+                      index: index,
+                      scroll: true
+                  });
+                  this.changeIndex(index);
+              },
+              changeIndex: function(index){
+                  this.index = index;
+              }
+          }
+      })
+      function hasLogin(){
+          if(!isLogin){
+            api.setStatusBarStyle({
+                style: 'dark',
+            });
+            $app.openFrame({
+                name: 'BaseLogin',
+                url: './html/BaseLogin/indexFrm.html',
+                bounces: 'false',
+                rect:{
+                  marginTop: 0,
+                  marginBottom: 0,
+                  w: 'auto'
+                }
+            });
+          }else {
+            api.setStatusBarStyle({
+                style: 'light',
+            });
+            api.openFrameGroup({
+                name: 'OrderListGroup',
+                background: '#f6f6f6',
+                scrollEnabled: true,
+                rect: {
+                    marginTop: $app.headerH,
+                    marginBottom:0,
+                    w: 'auto',
+                },
+                preload: 0,
+                frames: [{
+                    name: 'OrderListGroupItem1',
+                    url: './html/OrderList/indexFrm.html',
+                    bgColor: '#f6f6f6',
+                    pageParam: {
+                        discountStatus: 1
+                    }
+                }, {
+                    name: 'OrderListGroupItem2',
+                    url: './html/OrderList/indexFrm.html',
+                    bgColor: '#f6f6f6',
+                    pageParam: {
+                        discountStatus: 2
+                    }
+                }, {
+                    name: 'OrderListGroupItem3',
+                    url: './html/OrderList/indexFrm.html',
+                    bgColor: '#f6f6f6',
+                    pageParam: {
+                        discountStatus: 3
+                    }
+                }]
+            }, function(ret, err) {
+                app.changeIndex(ret.index);
+            });
+          }
+      }
+    }
+    function openMe(){
+      api.openFrame({
+          name: 'BaseMe',
+          url: './html/BaseMe/indexFrm.html',
+          bounces:false,
+          bgColor:'rgba(0,0,0,0.5)',
+          animation:{
+            type: "movein",
+            subType: "from_left",
+            duration: 300
+          }
+      });
+    }
+    function openMerchant(){
+      api.openFrame({
+          name: 'BaseMerchant',
+          url: './html/BaseMerchant/indexFrm.html',
+          bounces: false,
+          animation:{
+            type: "none",
+            subType: "none",
+          }
+      });
+      api.openFrame({
+          name: 'BaseMerchantBack',
+          url: './html/BaseMerchant/back.html'
+      });
+    }
+
+</script>
+
+</html>

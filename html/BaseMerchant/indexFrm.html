@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css"/>
+    <style media="screen">
+        html,
+        body {
+            background: #f6f6f6;
+        }
+    </style>
+</head>
+
+<body>
+
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    var aMap = null;
+    var openMap = null;
+    var initMap = null;
+    var app = {};
+    var frimeW = 0;
+    apiready = function() {
+        $app.ready('dark');
+        aMap = api.require('aMap');
+        frimeW = api.frameWidth;
+        openBack();
+        // vue 控制
+        app = new Vue({
+            el: '#app',
+            data: {
+
+            },
+            computed: {
+
+            },
+            methods: {
+
+            },
+            watch: {
+
+            },
+            mounted:function(){
+              openMap();
+            }
+        });
+        api.addEventListener({
+            name: 'backaMap'
+        }, function(){
+            api.setFrameAttr({
+                name: 'BaseMerchant',
+                hidden:true
+            });
+            api.setFrameAttr({
+                name: 'BaseMerchantBack',
+                hidden:true
+            });
+        });
+        api.addEventListener({
+            name: 'closeaMap'
+        }, function(){
+            api.closeFrame({
+                name: 'BaseMerchantBack'
+            });
+            api.closeFrame({
+                name: 'BaseMerchant'
+            });
+        });
+    };
+    function openBack(){
+        api.openFrame({
+            name: 'BaseMerchantBack',
+            url:'./back.html',
+            bgColor:'rgba(0,0,0,0.0)',
+            rect: {
+                x: 15,
+                y: 25,
+                w: 90,
+                h: 40
+            },
+        });
+    }
+    openMap = function(){
+        aMap.open({
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            showUserLocation: true,
+            zoomLevel: 17, //缩放等级 3-18级
+            fixedOn: 'BaseMerchant',
+            fixed: true
+        }, function(ret, err) {
+            if (ret.status) {
+                initMap()
+
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+    initMap = function(){
+        aMap.getLocation(function(ret, err) {
+            if (ret.status) {
+                // app.mapData.lon = ret.lon;
+                // app.mapData.lat = ret.lat;
+                aMap.setCenter({
+                    coords: {
+                        lon: ret.lon,
+                        lat: ret.lat
+                    },
+                    animation: true
+                });
+                // searchNearby();
+                aMap.setCompass({
+                    show: true,
+                    position: {
+                      x:frimeW-45,
+                      y:25,
+                    }
+                });
+            } else {
+                alert(JSON.stringify(ret));
+            }
+        });
+    }
+
+</script>
+
+</html>

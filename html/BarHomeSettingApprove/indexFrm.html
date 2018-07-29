@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        html,body{
+          background: #f6f6f6;
+        }
+        .tp{
+          padding: 10px;
+        }
+        .buttons {
+            padding: 30px;
+        }
+
+        .buttons .loginout {
+            height: 50px;
+            background: -webkit-linear-gradient(left, #6cdaac 50%, #5fcbcc);
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+        <div class="tp">
+          <img src="./rx.png" tapmode @click="changeThum">
+        </div>
+        <div class="tp">
+          <img src="./gh.png" tapmode @click="changeThum">
+        </div>
+        <div class="buttons">
+            <div class="loginout" tapmde @click="">提交</div>
+        </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+
+    apiready = function() {
+        $app.ready('light');
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+            },
+            methods: {
+                // 修改头像
+                changeThum: function() {
+                    var that = this
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        buttons: ['拍照', '图库']
+                    }, function(ret, err) {
+                        var index = ['', 'camera', 'library'];
+                        if (ret.buttonIndex == 3) {
+                            return
+                        }
+                        api.getPicture({
+                            sourceType: index[ret.buttonIndex],
+                            encodingType: 'jpg',
+                            mediaValue: 'pic',
+                            destinationType: 'url',
+                            allowEdit: true,
+                            quality: 50,
+                            saveToPhotoAlbum: false
+                        }, function(ret, err) {
+                            if (ret) {
+                                $app.ajax({
+                                    url: $app.apiUrl.uploadFile,
+                                    type: 'files',
+                                    data: {
+                                        file: ret.data
+                                    },
+                                    values: {
+                                        save_path: $app.config.userImages,
+                                        is_rename: 1
+                                    }
+                                }).then(function(ret) {
+                                    that.data.thum = ret.data.host_file_path;
+                                    that.update()
+                                })
+                            }
+                        });
+                    });
+                },
+
+            },
+            mounted: function() {
+
+            }
+        });
+    };
+</script>
+
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        .content {
+            background: #fff;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        .content .title {
+            font-weight: bold;
+        }
+
+        .content .show-money {
+            border-bottom: 1px solid #e5e5e5;
+            margin-bottom: 10px;
+            line-height: 80px;
+        }
+
+        .content .show-money .number {
+            height: 80px;
+            font-size: 15px;
+        }
+
+        .buttons {
+            padding: 20px;
+        }
+
+        .buttons .longBtn {
+            height: 50px;
+            background: -webkit-linear-gradient(left, #6cdaac 50%, #5fcbcc);
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+        <div class="aui-content-padded">
+            <div class="content">
+                <div class="aui-row show-money">
+                    <div class="aui-col-xs-3 title">银行 </div>
+                    <div class="aui-col-xs-9">
+                        <select class="number" v-model="data.bank_name">
+                            <option value="">请选择</option>
+                            <option value="中国农业银行">中国农业银行</option>
+                            <option value="中国建设银行">中国建设银行</option>
+                            <option value="中国工商银行">中国工商银行</option>
+                            <option value="中国银行">中国银行</option>
+                            <option value="招商银行">招商银行</option>
+                            <option value="光大银行">光大银行</option>
+                            <option value="中国邮政储蓄银行">中国邮政储蓄银行</option>
+                            <option value="兴业银行">兴业银行</option>
+                            <option value="中信银行">中信银行</option>
+                            <option value="浦发银行">浦发银行</option>
+                            <option value="广发银行">广发银行</option>
+                            <option value="平安银行">平安银行</option>
+                            <option value="交通银行">交通银行</option>
+                            <option value="华夏银行">华夏银行</option>
+                            <option value="平安银行">平安银行</option>
+                            <option value="民生银行">民生银行</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="aui-row show-money">
+                    <div class="aui-col-xs-3 title">持卡人 </div>
+                    <div class="aui-col-xs-9">
+                        <input class="number" type="text" v-model="data.card_holder" placeholder="输入持卡人姓名">
+                    </div>
+                </div>
+                <div class="aui-row show-money">
+                    <div class="aui-col-xs-3 title">卡号</div>
+                    <div class="aui-col-xs-9">
+                        <input class="number" type="number" v-model="data.card_number" placeholder="输入持卡人卡号">
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <div class="longBtn" @click="submit">添加</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    apiready = function() {
+        $app.ready('light');
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+                data: {
+                    bank_name: '',
+                    card_holder: '',
+                    card_number: '',
+                }
+            },
+            methods: {
+                submit: function() {
+                    if (!this.data.bank_name) {
+                        $app.toast('请选择银行')
+                        return;
+                    }
+                    if (!this.data.card_holder) {
+                        $app.toast('请填写持卡人')
+                        return;
+                    }
+                    if (!this.data.card_number) {
+                        $app.toast('请填写银行卡号')
+                        return;
+                    }
+                    $app.ajax({
+                        url: $app.apiUrl.bankCardSava,
+                        data: this.data
+                    }).then(function(resp) {
+                        $app.toast(resp.msg);
+                        api.sendEvent({
+                            name: 'updateBankCard',
+                        });
+                        setTimeout(function() {
+                            api.closeWin();
+                        }, 500)
+                    })
+                }
+            },
+        });
+    };
+</script>
+
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        html,
+        body {
+            background: #f6f6f6;
+        }
+
+        .come {
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        .inputs {
+            padding: 30px;
+        }
+
+        .inputs .input-line {
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            padding: 0 30px;
+        }
+
+        .buttons .login {
+            height: 50px;
+            background: -webkit-linear-gradient(left, #6cdaac 50%, #5fcbcc);
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+        }
+
+        .buttons .other {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .other-login{
+          text-align: center;
+        }
+        .other-login .title{
+          line-height: 60px;
+          margin:0 20px 20px 20px;
+          position: relative;
+
+        }
+        .other-login .title span{
+          background: #f6f6f6;
+          padding: 0 20px;
+          position: relative;
+          z-index: 20;
+        }
+        .other-login .title::after{
+          content: '';
+          display: block;
+          position: absolute;
+          bottom: 50%;
+          left: 0;
+          width: 100%;
+          height: 1px;
+          transform: scaleY(0.5);
+          background: #ccc;
+        }
+        .other-login{
+          text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="come">
+            <h1>欢迎登录</h1>
+        </div>
+        <div class="inputs">
+            <div class="input-line">
+                <input type="text" placeholder="输入手机号码" pattern="[0-9]*" v-model="mobile">
+            </div>
+            <div class="input-line">
+                <input type="password" placeholder="输入登录密码" v-model="password">
+            </div>
+        </div>
+        <div class="buttons">
+            <div class="login" tapmde @click="goIndex">登录</div>
+            <div class="other">
+                <div class="aui-row">
+                    <div class="aui-col-xs-6" tapmde @click="getPass">忘记密码?</div>
+                    <div class="aui-col-xs-6" tapmde @click="register">新用户注册</div>
+                </div>
+            </div>
+        </div>
+        <div class="other-login">
+            <div class="title"><span>第三方账户登录</span></div>
+            <div class="aui-row">
+                <div class="aui-col-xs-6" tapmde>QQ</div>
+                <div class="aui-col-xs-6" tapmde>微信</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    apiready = function() {
+        $app.ready();
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+                mobile: '13300000002',
+                password: '123456',
+            },
+            computed: {},
+            methods: {
+                goIndex: function() {
+                    var that = this;
+                    if (!$app.validate.mobile(this.mobile)) {
+                        $app.toast('请输入正确的手机号码');
+                        return;
+                    }
+                    if (!$app.validate.password(this.password)) {
+                        $app.toast('请输入6位及以上的数字字母组合密码');
+                        return;
+                    }
+                    api.setFrameAttr({
+                        name: 'BaseLogin',
+                        hidden: true,
+                    });
+                    api.sendEvent({
+                        name: 'loginIsTrue'
+                    });
+
+
+                    // $app.ajax({
+                    //     url: $app.apiUrl.login,
+                    //     data:{
+                    //         mobile:this.mobile,
+                    //         password: this.password,
+                    //     }
+                    // }).then(function(ret){
+                    //     $app.toast(ret.msg);
+                    //     that.mobile = '';
+                    //     that.password = '';
+                    //     $api.setStorage('token', ret.data.token.token);
+                    //     $api.setStorage('mobile', ret.data.user.mobile);
+                    //     api.setFrameAttr({
+                    //         name: 'BaseLogin',
+                    //         hidden: true,
+                    //     })
+                    //     api.openFrame({
+                    //         name: 'BarHome',
+                    //         url: '../BarHome/indexFrm.html',
+                    //         bounces: true,
+                    //         rect: {
+                    //             x: 0,
+                    //             y: headerPos.h,
+                    //             w: 'auto',
+                    //             h: frameHeight
+                    //         }
+                    //     })
+                    // })
+                },
+                getPass: function() {
+                    $app.openWin({
+                        name: 'BaseGetPass'
+                    })
+                },
+                register: function() {
+                    $app.openWin({
+                        name: 'BaseRegister'
+                    })
+                }
+            },
+            watch: {
+
+            }
+        });
+    };
+</script>
+
+</html>

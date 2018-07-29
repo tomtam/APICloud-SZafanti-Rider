@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+    html,body{
+      background: #f6f6f6;
+    }
+    .app{
+      font-size: 13px;
+    }
+    .search-box {
+        margin-top: 5px;
+        padding: 10px;
+        height: 50px;
+        background: #fff;
+    }
+    .aui-border-radius {
+        border-radius: 20px;
+        height: 30px;
+        line-height: 30px;
+    }
+    .aui-iconfont {
+        color: #6cdaac !important
+    }
+    .list{
+      margin-bottom: 10px;
+      padding: 15px;
+      background: #fff;
+    }
+    .list .user{
+    }
+    .list .user .avatar{
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #ccc;
+    }
+    .list .user .info{
+      padding: 5px;
+      line-height: 20px;
+    }
+    .list .user .stars{
+      text-align: right;
+      line-height: 50px;
+    }
+    .list .user .stars i{
+      margin-right:5px;
+      font-size: 15px;
+    }
+    .list .text{
+      padding: 10px 0;
+      line-height: 20px;
+    }
+    .list .pics{
+      padding-bottom: 15px;
+
+    }
+    .list .pics .image{
+      width: 60px;
+      height: 60px;
+      border:1px solid #e5e5e5;
+      margin-right: 8px;
+      display: inline-block;
+    }
+    .list .textarea{
+      border-top: 1px solid #e5e5e5;
+      padding: 10px 0;
+    }
+    .list .textarea textarea{
+      padding: 10px;
+      font-size: 12px;
+      min-height: 100px;
+      background: #f7f7f7
+    }
+    .btns {
+      text-align: right;
+    }
+    .btns .btn{
+      display: inline-block;
+      padding: 3px 25px;
+      background: #36dbaa;
+      color:#fff;
+      border-radius: 20px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+      <div class="aui-searchbar" id="search">
+          <div class="aui-searchbar-input aui-border-radius" tapmode onclick="doSearch()">
+              <form action="javascript:search();">
+                  <input type="search" placeholder="请输入用户名、手机号、订单号" id="search-input">
+              </form>
+              <i class="aui-iconfont aui-icon-search"></i>
+          </div>
+      </div>
+      <div class="list">
+        <div class="user">
+          <div class="aui-row">
+            <div class="aui-col-xs-2 ">
+              <div class="avatar"></div>
+            </div>
+            <div class="aui-col-xs-3 info">
+                <div class="name">李蕾蕾磊</div>
+                <div class="number">18987667788</div>
+            </div>
+            <div class="aui-col-xs-7 stars">
+              <i class="aui-iconfont aui-icon-star" style="color:#ffc640"></i>
+              <i class="aui-iconfont aui-icon-star" style="color:#ffc640"></i>
+              <i class="aui-iconfont aui-icon-star" style="color:#ffc640"></i>
+              <i class="aui-iconfont aui-icon-star"></i>
+              <i class="aui-iconfont aui-icon-star"></i>
+            </div>
+          </div>
+        </div>
+        <div class="text">
+          水果超级甜超级好吃，老板人也很好，发货速度快。水果超级甜超级好吃，老板人也很好，发货速度快水果超级甜超级好吃，老板人也很好，发货速度快
+        </div>
+      </div>
+      <div class="list">
+        <div class="user">
+          <div class="aui-row">
+            <div class="aui-col-xs-2 ">
+              <div class="avatar"></div>
+            </div>
+            <div class="aui-col-xs-3 info">
+                <div class="name">李蕾蕾磊</div>
+                <div class="number">18987667788</div>
+            </div>
+            <div class="aui-col-xs-7 stars">
+              <i class="aui-iconfont aui-icon-star" style="color:#ffc640"></i>
+              <i class="aui-iconfont aui-icon-star" style="color:#ffc640"></i>
+              <i class="aui-iconfont aui-icon-star" style="color:#ffc640"></i>
+              <i class="aui-iconfont aui-icon-star"></i>
+              <i class="aui-iconfont aui-icon-star"></i>
+            </div>
+          </div>
+        </div>
+        <div class="text">
+          水果超级甜超级好吃，老板人也很好，发货速度快。水果超级甜超级好吃，老板人也很好，发货速度快水果超级甜超级好吃，老板人也很好，发货速度快
+        </div>
+      </div>
+      <div class="list">
+        <div class="user">
+          <div class="aui-row">
+            <div class="aui-col-xs-2 ">
+              <div class="avatar"></div>
+            </div>
+            <div class="aui-col-xs-3 info">
+                <div class="name">李蕾蕾磊</div>
+                <div class="number">18987667788</div>
+            </div>
+            <div class="aui-col-xs-7 stars">
+              <i class="aui-iconfont aui-icon-star" style="color:#ffc640"></i>
+              <i class="aui-iconfont aui-icon-star" style="color:#ffc640"></i>
+              <i class="aui-iconfont aui-icon-star" style="color:#ffc640"></i>
+              <i class="aui-iconfont aui-icon-star"></i>
+              <i class="aui-iconfont aui-icon-star"></i>
+            </div>
+          </div>
+        </div>
+        <div class="text">
+          水果超级甜超级好吃，老板人也很好，发货速度快。水果超级甜超级好吃，老板人也很好，发货速度快水果超级甜超级好吃，老板人也很好，发货速度快
+        </div>
+      </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+    apiready = function() {
+        $app.ready('ligth')
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+
+            },
+            computed: {
+
+            },
+            methods: {
+
+            },
+            watch: {
+
+            }
+        });
+    };
+</script>
+
+</html>

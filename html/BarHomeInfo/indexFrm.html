@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui-skin.css" />
+    <style media="screen">
+        html,body{
+          background: #f6f6f6;
+        }
+        .aui-list {
+            margin-top: 8px;
+        }
+
+        .image {
+            border: 1px solid #e5e5e5;
+            border-radius: 50%;
+            margin: 10px 0;
+            overflow: hidden;
+            padding: 1px;
+        }
+
+        .image img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        input {
+            text-align: right;
+        }
+
+        .buttons {
+            padding: 30px;
+        }
+
+        .buttons .loginout {
+            height: 50px;
+            background: -webkit-linear-gradient(left, #6cdaac 50%, #5fcbcc);
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50px;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item" tapmde @click="changeThum">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">修改头像</div>
+                    <div class="aui-list-item-right">
+                        <div class="image">
+                            <img src="data.thum">
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item" tapmde @click="inputShopName">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">昵称</div>
+                    <div class="aui-list-item-right" v-text="">昵称</div>
+                </div>
+            </li>
+            <li class="aui-list-item" tapmde @click="changeSex">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">性别</div>
+                    <div class="aui-list-item-right" v-text="">女</div>
+                </div>
+            </li>
+            <li class="aui-list-item" tapmde @click="settingMobile">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">绑定手机</div>
+                    <div class="aui-list-item-right" v-text="">18888888888</div>
+                </div>
+            </li>
+            <li class="aui-list-item" tapmde @click="settingApprove">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">实名认证</div>
+                    <div class="aui-list-item-right" v-text="">去认证</div>
+                </div>
+            </li>
+        </ul>
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item" tapmde @click="setting">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">密码设置</div>
+                    <div class="aui-list-item-right"></div>
+                </div>
+            </li>
+        </ul>
+        <div class="buttons">
+            <div class="loginout" tapmde @click="logout">退出登录</div>
+        </div>
+    </div>
+</body>
+<script src="../../script/api.js"></script>
+<script src="../../script/vue.min.js"></script>
+<script src="../../script/fastclick.js"></script>
+<script src="../../script/app.js"></script>
+<script>
+
+    apiready = function() {
+        $app.ready('light');
+        // vue 控制
+        var app = new Vue({
+            el: '#app',
+            data: {
+                data: {
+                    trade_area_info: {},
+                    thum:'',
+                    name:'',
+                    mobile:'',
+                },
+            },
+            methods: {
+                // 修改头像
+                changeThum: function() {
+                    var that = this
+                    api.actionSheet({
+                        cancelTitle: '取消',
+                        buttons: ['拍照', '图库']
+                    }, function(ret, err) {
+                        var index = ['', 'camera', 'library'];
+                        if (ret.buttonIndex == 3) {
+                            return
+                        }
+                        api.getPicture({
+                            sourceType: index[ret.buttonIndex],
+                            encodingType: 'jpg',
+                            mediaValue: 'pic',
+                            destinationType: 'url',
+                            allowEdit: true,
+                            quality: 50,
+                            saveToPhotoAlbum: false
+                        }, function(ret, err) {
+                            if (ret) {
+                                $app.ajax({
+                                    url: $app.apiUrl.uploadFile,
+                                    type: 'files',
+                                    data: {
+                                        file: ret.data
+                                    },
+                                    values: {
+                                        save_path: $app.config.userImages,
+                                        is_rename: 1
+                                    }
+                                }).then(function(ret) {
+                                    that.data.thum = ret.data.host_file_path;
+                                    that.update()
+                                })
+                            }
+                        });
+                    });
+                },
+                changeSex:function(){
+                  var that = this
+                  api.actionSheet({
+                      cancelTitle: '取消',
+                      buttons: ['男', '女']
+                  }, function(ret, err) {
+                      var index = ['', '男', '女'];
+                      if (ret.buttonIndex == 3) {
+                          return
+                      }
+                  })
+                },
+                // 修改店铺名称
+                inputShopName: function() {
+                    var that = this;
+                    api.prompt({
+                        buttons: ['确定', '取消'],
+                        type: 'text',
+                        title: '请输入昵称',
+                        // text: that.data.name
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.buttonIndex == 1 && ret.text) {
+                                // that.data.name = ret.text;
+                                // that.update()
+                            }
+                        }
+                    });
+                },
+                update: function() {
+                    $app.ajax({
+                        url: $app.apiUrl.shopUpdate,
+                        data: this.data,
+                    }).then(function(ret) {
+                        $app.toast(ret.msg);
+                    })
+                },
+
+                // 退出登录
+                logout: function() {
+                    api.confirm({
+                        title: '确认退出登录?',
+                        buttons: ['确定', '取消']
+                    }, function(ret, err) {
+                        if (ret.buttonIndex == 1) {
+                            api.sendEvent({
+                                name: 'logout',
+                            });
+                            api.closeWin();
+                        }
+                    });
+                },
+                // 读取店铺数据
+                readShopInfo: function() {
+                    var that = this;
+                    $app.ajax({
+                        url: $app.apiUrl.readShopInfo
+                    }).then(function(ret) {
+                        that.data = ret.data;
+                    })
+                },
+
+                // 跳转到设置页面
+                setting: function() {
+                    $app.openWin({
+                        name: 'BarHomeSetting'
+                    })
+                },
+                settingMobile:function(){
+                    $app.openWin({
+                        name: 'BarHomeSettingMobile'
+                    })
+                },
+                settingApprove:function(){
+                    $app.openWin({
+                        name: 'BarHomeSettingApprove'
+                    })
+                }
+
+
+            },
+            mounted: function() {
+                this.readShopInfo();
+            }
+        });
+        // 下拉刷新
+        api.setRefreshHeaderInfo({
+            bgColor: '#fff',
+        }, function(ret, err) {
+            app.readShopInfo();
+        });
+
+        api.addEventListener({
+            name: 'selectBarHomeSettingAddress'
+        }, function(ret, err) {
+            if (ret) {
+                app.data.longitude = ret.value.poi.lon;
+                app.data.latitude = ret.value.poi.lat;
+                app.data.address = ret.value.poi.name;
+                app.update();
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+
+
+    };
+</script>
+
+</html>
